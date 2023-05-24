@@ -60,6 +60,22 @@
 #include "same53/include/same53.h"
 #elif defined(__SAME53N20A__)
 #include "same53/include/same53.h"
+
+// SAME51 series
+#elif defined(__SAME51G18A__)
+#include "same51/include/same51g18a.h"
+#elif defined(__SAME51G19A__)
+#include "same51/include/same51g19a.h"
+#elif defined(__SAME51J18A__)
+#include "same51/include/same51j18a.h"
+#elif defined(__SAME51J19A__)
+#include "same51/include/same51j19a.h"
+#elif defined(__SAME51J20A__)
+#include "same51/include/same51j20a.h"
+#elif defined(__SAME51N19A__)
+#include "same51/include/same51n19a.h"
+#elif defined(__SAME51N20A__)
+#include "same51/include/same51n20a.h"
 #endif
 
 #endif /* _SAME_INCLUDED_ */
