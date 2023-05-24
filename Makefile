@@ -29,7 +29,7 @@ PACKAGE_VERSION := 1.4.0
 
 # -----------------------------------------------------------------------------
 # packaging specific
-PACKAGE_FOLDER := CMSIS-Atmel
+PACKAGE_FOLDER := CMSIS-Atmel/CMSIS
 
 ifeq (postpackaging,$(findstring $(MAKECMDGOALS),postpackaging))
   PACKAGE_FILENAME=$(PACKAGE_NAME)-$(PACKAGE_VERSION).tar.bz2
@@ -48,14 +48,20 @@ endif
 all: clean print_info
 	@echo ----------------------------------------------------------
 	@echo "Packaging module."
-	tar --exclude=.gitattributes --exclude=.travis.yml --exclude=.git -cjf "$(PACKAGE_NAME)-$(PACKAGE_VERSION).tar.bz2" "$(PACKAGE_FOLDER)"
-	$(MAKE) --no-builtin-rules postpackaging -C .
+	@mkdir build && \
+	cp -Rf $(PACKAGE_FOLDER) build/ && \
+	cp package.json build/ && \
+	cd ./build && \
+	tar -cjf "../$(PACKAGE_NAME)-$(PACKAGE_VERSION).tar.bz2" CMSIS package.json && \
+	cd ../ && \
+	rm -Rf build	
+	@$(MAKE) --no-builtin-rules postpackaging -C .
 	@echo ----------------------------------------------------------
 
 clean:
 	@echo ----------------------------------------------------------
 	@echo  Cleanup
-	-$(RM) $(PACKAGE_NAME)-*.tar.bz2 package_$(PACKAGE_NAME)_*.json test_package_$(PACKAGE_NAME)_*.json
+	-$(RM) -R $(PACKAGE_NAME)-*.tar.bz2 package_$(PACKAGE_NAME)_*.json test_package_$(PACKAGE_NAME)_*.json build
 	@echo ----------------------------------------------------------
 
 print_info:
@@ -71,5 +77,5 @@ postpackaging:
 	@echo "PACKAGE_CHKSUM      = $(PACKAGE_CHKSUM)"
 	@echo "PACKAGE_SIZE        = $(PACKAGE_SIZE)"
 	@echo "PACKAGE_FILENAME    = $(PACKAGE_FILENAME)"
-	cat extras/package_index.json.template | sed s/%%VERSION%%/$(PACKAGE_VERSION)/ | sed s/%%FILENAME%%/$(PACKAGE_FILENAME)/ | sed s/%%CHECKSUM%%/$(PACKAGE_CHKSUM)/ | sed s/%%SIZE%%/$(PACKAGE_SIZE)/ > package_$(PACKAGE_NAME)_$(PACKAGE_VERSION)_index.json
+	@cat extras/package_index.json.template | sed s/%%VERSION%%/$(PACKAGE_VERSION)/ | sed s/%%FILENAME%%/$(PACKAGE_FILENAME)/ | sed s/%%CHECKSUM%%/$(PACKAGE_CHKSUM)/ | sed s/%%SIZE%%/$(PACKAGE_SIZE)/ > package_$(PACKAGE_NAME)_$(PACKAGE_VERSION)_index.json
 	@echo "package_$(PACKAGE_NAME)_$(PACKAGE_VERSION)_index.json created"
