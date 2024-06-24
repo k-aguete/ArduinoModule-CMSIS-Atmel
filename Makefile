@@ -29,7 +29,7 @@ PACKAGE_VERSION := 1.4.1
 
 # -----------------------------------------------------------------------------
 # packaging specific
-PACKAGE_FOLDER := CMSIS-Atmel/CMSIS
+PACKAGE_FOLDER := CMSIS
 
 ifeq (postpackaging,$(findstring $(MAKECMDGOALS),postpackaging))
   PACKAGE_FILENAME=$(PACKAGE_NAME)-$(PACKAGE_VERSION).tar.gz
