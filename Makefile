@@ -20,19 +20,19 @@
 
 SHELL = /bin/sh
 
-.SUFFIXES: .tar.bz2
+.SUFFIXES: .tar.gz
 
 ROOT_PATH := .
 
-PACKAGE_NAME := CMSIS-Atmel
-PACKAGE_VERSION := 1.4.0
+PACKAGE_NAME := framework-cmsis-atmel
+PACKAGE_VERSION := 1.4.1
 
 # -----------------------------------------------------------------------------
 # packaging specific
 PACKAGE_FOLDER := CMSIS-Atmel/CMSIS
 
 ifeq (postpackaging,$(findstring $(MAKECMDGOALS),postpackaging))
-  PACKAGE_FILENAME=$(PACKAGE_NAME)-$(PACKAGE_VERSION).tar.bz2
+  PACKAGE_FILENAME=$(PACKAGE_NAME)-$(PACKAGE_VERSION).tar.gz
   PACKAGE_CHKSUM := $(firstword $(shell shasum -a 256 "$(PACKAGE_FILENAME)"))
   PACKAGE_SIZE := $(firstword $(shell wc -c "$(PACKAGE_FILENAME)"))
 endif
@@ -52,7 +52,7 @@ all: clean print_info
 	cp -Rf $(PACKAGE_FOLDER) build/ && \
 	cp package.json build/ && \
 	cd ./build && \
-	tar -cjf "../$(PACKAGE_NAME)-$(PACKAGE_VERSION).tar.bz2" CMSIS package.json && \
+	tar -czf "../$(PACKAGE_NAME)-$(PACKAGE_VERSION).tar.gz" CMSIS package.json && \
 	cd ../ && \
 	rm -Rf build	
 	@$(MAKE) --no-builtin-rules postpackaging -C .
@@ -61,7 +61,7 @@ all: clean print_info
 clean:
 	@echo ----------------------------------------------------------
 	@echo  Cleanup
-	-$(RM) -R $(PACKAGE_NAME)-*.tar.bz2 package_$(PACKAGE_NAME)_*.json test_package_$(PACKAGE_NAME)_*.json build
+	-$(RM) -R $(PACKAGE_NAME)-*.tar.gz package_$(PACKAGE_NAME)_*.json test_package_$(PACKAGE_NAME)_*.json build
 	@echo ----------------------------------------------------------
 
 print_info:
